@@ -32,3 +32,8 @@ class DownloadDataDB(BaseModel):
     id: str = Field(...)
     title:str = Field(...)
     type: str = Field(...)
+
+class TotalDataResponse(BaseModel):
+    totalUsage: int = Field(...)
+    totalMp3: int = Field(...)
+    totalMp4: int = Field(...)
