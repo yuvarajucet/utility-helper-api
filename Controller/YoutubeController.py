@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter
 from fastapi.responses import FileResponse
 from Model.YoutubeData import YoutubeRequestModel
 from Helper.YoutubeHelper import YoutubeHelper

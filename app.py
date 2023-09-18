@@ -3,13 +3,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import dotenv
 import os
-dotenv.load_dotenv()
 
 from Controller.YoutubeController import youtuber
+from Controller.TruecallerController import truecaller
 
+dotenv.load_dotenv()
 app = FastAPI()
 
 app.include_router(youtuber)
+app.include_router(truecaller)
 
 app.add_middleware(
     CORSMiddleware,
