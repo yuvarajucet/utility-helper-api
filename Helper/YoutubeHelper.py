@@ -1,5 +1,6 @@
 import json
-from Model.YoutubeData import YoutubeRequestModel, YoutubeResponseModel, DownloadDataDB
+import datetime
+from Model.YoutubeData import YoutubeRequestModel, YoutubeResponseModel, DownloadDataDB, TotalDataResponse
 from pytube import YouTube as YT
 import os
 import uuid
@@ -10,6 +11,7 @@ class YoutubeHelper:
         pass
 
     def VideoDownloader(self, info: YoutubeRequestModel) -> YoutubeResponseModel:
+        self.deleteOldItems()
         try:
             instance = YT(info.url)
             downloadId = self.getGuid()
@@ -74,3 +76,38 @@ class YoutubeHelper:
                 return info["title"]
         return "File"
         
+    def GetTotalYoutubeUsage(self):
+        try:
+            with open("./Data/downloadData.json", "r") as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            data = []
+
+        response: TotalDataResponse = {
+            "totalUsage" : len(data),
+            "totalMp3" : self.GetTotalData(data, "mp3"),
+            "totalMp4" : self.GetTotalData(data, "mp4"),
+        }
+
+        return response
+        
+    def GetTotalData(data, type_) -> int:
+        totalData = 0
+        if len(data) != 0:
+            for info in data:
+                if info["type"] == type_:
+                    totalData+=1
+        return totalData
+
+    def deleteOldItems():
+        folderPath = os.getcwd() + "/downloads/"
+        currentTime = datetime.datetime.now()
+        for filename in os.listdir(folderPath):
+            filePath = os.path.join(folderPath, filename)
+
+            if os.path.exists(filePath):
+                modifiedTime = datetime.datetime.fromtimestamp(os.path.getmtime(filePath))
+                timeDiff = currentTime - modifiedTime
+
+                if timeDiff.total_seconds() > 600:
+                    os.remove(filePath)
