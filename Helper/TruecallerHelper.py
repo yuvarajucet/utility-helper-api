@@ -51,36 +51,36 @@ class TruecallerHelper:
                 
             elif requiredField == "phone":
                 if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None:
+                    if userData.get("phones") is not None and userData.get("e164Format") is not None:
                         return userData["phones"][0]["e164Format"] 
 
             elif requiredField == "provider":
                 if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None:
+                    if userData.get("phones") is not None and userData.get("carier") is not None:
                         return userData["phones"][0]["carrier"]
             
             elif requiredField == "country":
                 if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None:
+                    if userData.get("phones") is not None and userData.get("countryCode") is not None:
                         return userData["phones"][0]["countryCode"]
             
             elif requiredField == "city":
                 if len(userData["addresses"]) > 0:
-                    if userData.get("addresses") is not None:
+                    if userData.get("addresses") is not None and userData.get("city") is not None:
                         return userData["addresses"][0]["city"]
                 
             elif requiredField == "usertype":
                 if len(userData["badges"]) > 0:
-                    if userData.get("badges") is not None:
+                    if userData.get("badges") is not None and userData.get("badges") is not None:
                         return userData["badges"][0]
             
             elif requiredField == "bussinessimage":
-                if userData.get("businessProfile") is not None:
+                if userData.get("businessProfile") is not None and userData.get("logoUrl") is not None:
                     return userData["businessProfile"]["logoUrl"]
                 
             elif requiredField == "email":
                 if len(userData["internetAddresses"]) > 0:
-                    if userData.get("internetAddresses") is not None:
+                    if userData.get("internetAddresses") is not None and userData.get("id") is not None:
                         return userData["internetAddresses"][0]["id"]
 
     def StoreLocalDB(self, data):
