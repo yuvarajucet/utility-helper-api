@@ -14,6 +14,7 @@ class YoutubeRequestModel(BaseModel):
 
 class YoutubeResponseModel(BaseModel):
     status: bool = Field(...)
+    mediaType: str = Field(...)
     message: str = Field(...)
     url: str = Field(...)
     title: str = Field(...)
@@ -22,6 +23,7 @@ class YoutubeResponseModel(BaseModel):
         schema_extra = {
             "example":{
                 "status": True,
+                "mediaType": "mp3/mp4",
                 "message": "Data fetch success",
                 "url": "https://localhost/video.mp4",
                 "title": "This is demo video"
