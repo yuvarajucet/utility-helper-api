@@ -30,9 +30,11 @@ class YoutubeHelper:
                         bestQualityAudio = stream
                 bestQualityAudio.download(output_path = downloadPath, filename = downloadId + ".mp3")
 
+            contentType = "Video" if info.type == "mp4" else "Audio"
             response: YoutubeResponseModel = {
                 "status": True,
-                "message": "Video found",
+                "mideaType": info.type,
+                "message": "{0} found".format(contentType),
                 "url": os.getenv("APIServer") + "/api/v1/youtube/download/" + info.type + "/" + downloadId + "." + info.type,
                 "title": title
             }
@@ -42,6 +44,7 @@ class YoutubeHelper:
         except Exception as ex:
             response: YoutubeResponseModel = {
                 "status": False,
+                "mideaType": info.type,
                 "message": "Failed to download",
                 "url": "Null",
                 "title": "Null"

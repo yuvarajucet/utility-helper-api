@@ -2,6 +2,7 @@ annotated-types==0.5.0
 anyio==3.7.1
 certifi==2023.7.22
 click==8.1.7
+colorama==0.4.6
 dnspython==2.4.2
 email-validator==2.0.0.post2
 fastapi==0.103.1
@@ -14,6 +15,8 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.3
 orjson==3.9.7
+phonenumbers==8.13.20
+prompt-toolkit==3.0.36
 pydantic==2.3.0
 pydantic-extra-types==2.1.0
 pydantic-settings==2.0.3
@@ -22,11 +25,15 @@ python-dotenv==1.0.0
 python-multipart==0.0.6
 pytube==15.0.0
 PyYAML==6.0.1
+questionary==2.0.1
 sniffio==1.3.0
 starlette==0.27.0
+truecallerpy==1.0.3
 typing_extensions==4.7.1
 ujson==5.8.0
 uvicorn==0.23.2
 uvloop==0.17.0
 watchfiles==0.20.0
+wcwidth==0.2.6
 websockets==11.0.3
+python-dotenv==1.0.0
