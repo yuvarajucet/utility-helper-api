@@ -39,3 +39,4 @@ wcwidth==0.2.6
 websockets==11.0.3
 python-dotenv==1.0.0
 pytubefix==1.1.2
+requests==2.31.0
