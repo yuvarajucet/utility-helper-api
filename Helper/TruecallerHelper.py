@@ -55,6 +55,7 @@ class TruecallerHelper:
 
     def FillUserInfo(self, userInfo, requiredField):
         try:
+            print(userInfo)
             userData = userInfo["data"][0]
             if len(userData) > 0:
                 if requiredField == "name":
