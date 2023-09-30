@@ -3,6 +3,7 @@ import json
 
 from Module.TruecallerModule import TruecallerModule as TR
 from Model.TruecallerData import TruecallerResponseData, TruecallerUsageResponse
+from Logger.ErrorLog import Logger
 
 class TruecallerHelper:
 
@@ -53,49 +54,57 @@ class TruecallerHelper:
         return userData
 
     def FillUserInfo(self, userInfo, requiredField):
-        userData = userInfo["data"][0]
-        if len(userData) > 0:
-            if requiredField == "name":
-                if userData.get("name") is not None:
-                    return userData["name"]
-            
-            elif requiredField == "image":
-                if userData.get("image") is not None:
-                    return userData["image"]
+        try:
+            userData = userInfo["data"][0]
+            if len(userData) > 0:
+                if requiredField == "name":
+                    if userData.get("name") is not None:
+                        return userData["name"]
                 
-            elif requiredField == "phone":
-                if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None and userData["phones"][0].get("e164Format") is not None:
-                        return userData["phones"][0]["e164Format"] 
+                elif requiredField == "image":
+                    if userData.get("image") is not None:
+                        return userData["image"]
+                    
+                elif requiredField == "phone":
+                    if len(userData["phones"]) > 0:
+                        if userData.get("phones") is not None and userData["phones"][0].get("e164Format") is not None:
+                            return userData["phones"][0]["e164Format"] 
 
-            elif requiredField == "provider":
-                if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None and userData["phones"][0].get("carrier") is not None:
-                        return userData["phones"][0]["carrier"]
-            
-            elif requiredField == "country":
-                if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None and userData["phones"][0].get("countryCode") is not None:
-                        return userData["phones"][0]["countryCode"]
-            
-            elif requiredField == "city":
-                if len(userData["addresses"]) > 0:
-                    if userData.get("addresses") is not None and userData["addresses"][0].get("city") is not None:
-                        return userData["addresses"][0]["city"]
+                elif requiredField == "provider":
+                    if len(userData["phones"]) > 0:
+                        if userData.get("phones") is not None and userData["phones"][0].get("carrier") is not None:
+                            return userData["phones"][0]["carrier"]
                 
-            elif requiredField == "usertype":
-                if len(userData["badges"]) > 0:
-                    if userData.get("badges") is not None and userData.get("badges") is not None:
-                        return userData["badges"][0]
-            
-            elif requiredField == "bussinessimage":
-                if userData.get("businessProfile") is not None and userData.get("logoUrl") is not None:
-                    return userData["businessProfile"]["logoUrl"]
+                elif requiredField == "country":
+                    if len(userData["phones"]) > 0:
+                        if userData.get("phones") is not None and userData["phones"][0].get("countryCode") is not None:
+                            return userData["phones"][0]["countryCode"]
                 
-            elif requiredField == "email":
-                if len(userData["internetAddresses"]) > 0:
-                    if userData.get("internetAddresses") is not None and userData.get("id") is not None:
-                        return userData["internetAddresses"][0]["id"]
+                elif requiredField == "city":
+                    if len(userData["addresses"]) > 0:
+                        if userData.get("addresses") is not None and userData["addresses"][0].get("city") is not None:
+                            return userData["addresses"][0]["city"]
+                    
+                elif requiredField == "usertype":
+                    if len(userData["badges"]) > 0:
+                        if userData.get("badges") is not None and userData.get("badges") is not None:
+                            return userData["badges"][0]
+                
+                elif requiredField == "bussinessimage":
+                    if userData.get("businessProfile") is not None and userData.get("logoUrl") is not None:
+                        return userData["businessProfile"]["logoUrl"]
+                    
+                elif requiredField == "email":
+                    if len(userData["internetAddresses"]) > 0:
+                        if userData.get("internetAddresses") is not None and userData.get("id") is not None:
+                            return userData["internetAddresses"][0]["id"]
+                        
+        except Exception as ex:
+            Logger.Log(Logger, self.FillUserInfo.__name__, str(ex))
+            return {
+                "status": False,
+                "message": "Failed while looking user details"
+            }
 
     def StoreLocalDB(self, data):
         try:

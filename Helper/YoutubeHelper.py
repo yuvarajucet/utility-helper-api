@@ -1,10 +1,12 @@
 import json
 import datetime
-from Model.YoutubeData import YoutubeRequestModel, YoutubeResponseModel, DownloadDataDB, TotalDataResponse
 #from pytube import YouTube as YT
 from pytubefix import YouTube as YT
 import os
 import uuid
+
+from Model.YoutubeData import YoutubeRequestModel, YoutubeResponseModel, DownloadDataDB, TotalDataResponse
+from Logger.ErrorLog import Logger
 
 class YoutubeHelper:
 
@@ -43,6 +45,7 @@ class YoutubeHelper:
             return response
 
         except Exception as ex:
+            Logger.Log(Logger, self.VideoDownloader.__name__, str(ex))
             response: YoutubeResponseModel = {
                 "status": False,
                 "mideaType": info.type,

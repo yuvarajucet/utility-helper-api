@@ -3,6 +3,8 @@ import json
 import random
 import os
 
+from Logger.ErrorLog import Logger
+
 class TruecallerModule:
     
     def __init__(self) -> None:
@@ -14,19 +16,26 @@ class TruecallerModule:
         json = {'countryCode':'','dialingCode':None,'installationDetails':{'app':{'buildVersion':5,'majorVersion':11,'minorVersion':75, 'store':'GOOGLE_PLAY'},'device':{'deviceId':''.join(random.choices(NUMS+LETTS, k=16)),'language':'en','manufacturer':'Xiaomi','mobileServices':['GMS'],'model':'M2010J19SG','osName':'Android','osVersion':'10','simSerials':[''.join(random.choices(NUMS, k=19)), ''.join(random.choices(NUMS, k=20))]},'language':'en','sims':[{'imsi':''.join(random.choices(NUMS, k=15)),'mcc':'413','mnc':'2','operator':None}]},'phoneNumber':phone,'region':'region-2','sequenceNo':2}
         headers = {'content-type':'application/json; charset=UTF-8','accept-encoding':'gzip','user-agent':'Truecaller/11.75.5 (Android;10)','clientsecret':'lvc22mp3l1sfv6ujg83rd17btt'}
 
-        response = requests.post('https://account-asia-south1.truecaller.com/v2/sendOnboardingOtp', headers=headers, json=json)
-        if response.json()['status'] == 1 or response.json()['status'] == 9:
-            os.environ["requestId"] = response.json()['requestId']
-            return {
-                "status": True,
-                "message": f"Sent an OTP for {phone}"
-            }
-        else:
-            os.environ["requestId"] = "0"
+        try:
+            response = requests.post('https://account-asia-south1.truecaller.com/v2/sendOnboardingOtp', headers=headers, json=json)
+            if response.json()['status'] == 1 or response.json()['status'] == 9:
+                os.environ["requestId"] = response.json()['requestId']
+                return {
+                    "status": True,
+                    "message": f"Sent an OTP for {phone}"
+                }
+            else:
+                os.environ["requestId"] = "0"
+                return {
+                    "status": False,
+                    "message": response.json()['message']
+                } 
+        except Exception as ex:
+            Logger.Log(Logger, self.SendOTPForLogin.__name__, str(ex))
             return {
                 "status": False,
-                "message": response.json()['message']
-            } 
+                "message": "Failed to send OTP!"
+            }
 
     def ValidateOTP(self, phone, otp):
         json = {
@@ -44,23 +53,30 @@ class TruecallerModule:
             'clientsecret':'lvc22mp3l1sfv6ujg83rd17btt'
         }
 
-        response = requests.post('https://account-asia-south1.truecaller.com/v1/verifyOnboardingOtp', headers=headers, json=json)
+        try:
+            response = requests.post('https://account-asia-south1.truecaller.com/v1/verifyOnboardingOtp', headers=headers, json=json)
 
-        if response.json()['status'] == 11:
+            if response.json()['status'] == 11:
+                return {
+                    "status": False,
+                    "message": "OTP code is Invalid"
+                }
+            elif response.json()['status'] == 2 and response.json()['suspended']:
+                return {
+                    "status": False,
+                    "message": "Opps!... Your account got suspended. Try another number :("
+                }
+            else:
+                os.environ["InstallationID"] = response.json()['installationId']
+                return {
+                    "status": True,
+                    "message": "Validation success!"
+                }
+        except Exception as ex:
+            Logger.Log(Logger, self.ValidateOTP.__name__, str(ex))
             return {
                 "status": False,
-                "message": "OTP code is Invalid"
-            }
-        elif response.json()['status'] == 2 and response.json()['suspended']:
-            return {
-                "status": False,
-                "message": "Opps!... Your account got suspended. Try another number :("
-            }
-        else:
-            os.environ["InstallationID"] = response.json()['installationId']
-            return {
-                "status": True,
-                "message": "Validation success!"
+                "message": "Failed to validate OTP!"
             }
 
     def search_phonenumber(self, phone, countryCode, authToken):
@@ -81,9 +97,17 @@ class TruecallerModule:
             'authorization':'Bearer ' + authToken
         }
 
-        response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
-        if response.json().get('status'):
-            return None
-        else:
-            return json.loads(response.content)
+        try:
+            response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
+            if response.json().get('status'):
+                return None
+            else:
+                return json.loads(response.content)
+
+        except Exception as ex:
+            Logger.Log(Logger, self.search_phonenumber.__name__, str(ex))
+            return {
+                "status": False,
+                "message": "Failed to get user details"
+            }
         
