@@ -101,10 +101,6 @@ class TruecallerHelper:
                         
         except Exception as ex:
             Logger.Log(Logger, self.FillUserInfo.__name__, str(ex))
-            return {
-                "status": False,
-                "message": "Failed while looking user details"
-            }
 
     def StoreLocalDB(self, data):
         try:
