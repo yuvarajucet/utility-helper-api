@@ -13,3 +13,7 @@ class TruecallerResponseData(BaseModel):
 
 class TruecallerUsageResponse(BaseModel):
     total: int = Field(...)
+
+class TruecallerLogin(BaseModel):
+    number: str = Field(...)
+    otp: str = Field(default= None)

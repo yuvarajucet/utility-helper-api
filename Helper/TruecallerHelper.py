@@ -1,7 +1,7 @@
 import os
 import json
-from truecallerpy import search_phonenumber
 
+from Module.TruecallerModule import TruecallerModule as TR
 from Model.TruecallerData import TruecallerResponseData, TruecallerUsageResponse
 
 class TruecallerHelper:
@@ -9,7 +9,15 @@ class TruecallerHelper:
     def __init__(self) -> None:
         pass
 
-    async def GetNumberInfo(self, number):
+    def RegisterMobileNumber(self, phone):
+        registerStatus = TR.SendOTPForLogin(TR, phone)
+        return registerStatus
+
+    def ValidateOTP(self, phone, otp):
+        validateStatus = TR.ValidateOTP(TR, phone, otp)
+        return validateStatus
+
+    def GetNumberInfo(self, number):
         phone = number
         country_code = "IN"
         installation_id = os.getenv("InstallationID")
@@ -17,8 +25,14 @@ class TruecallerHelper:
         response = None
         isExists = self.CheckNumberAlreadyExists(self, number)
         if isExists == None:
-            data = await search_phonenumber(phone, country_code, installation_id)
-            response = self.CreateUserData(self, data)
+            data = TR.search_phonenumber(TR, phone, country_code, installation_id)
+            if data:
+                response = self.CreateUserData(self, data)
+            else:
+                return {
+                    "status": False,
+                    "message": "Something went wrong!"
+                }
         else:
             response = isExists
         return response
@@ -39,7 +53,7 @@ class TruecallerHelper:
         return userData
 
     def FillUserInfo(self, userInfo, requiredField):
-        userData = userInfo["data"]["data"][0]
+        userData = userInfo["data"][0]
         if len(userData) > 0:
             if requiredField == "name":
                 if userData.get("name") is not None:
@@ -51,22 +65,22 @@ class TruecallerHelper:
                 
             elif requiredField == "phone":
                 if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None and userData.get("e164Format") is not None:
+                    if userData.get("phones") is not None and userData["phones"][0].get("e164Format") is not None:
                         return userData["phones"][0]["e164Format"] 
 
             elif requiredField == "provider":
                 if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None and userData.get("carier") is not None:
+                    if userData.get("phones") is not None and userData["phones"][0].get("carrier") is not None:
                         return userData["phones"][0]["carrier"]
             
             elif requiredField == "country":
                 if len(userData["phones"]) > 0:
-                    if userData.get("phones") is not None and userData.get("countryCode") is not None:
+                    if userData.get("phones") is not None and userData["phones"][0].get("countryCode") is not None:
                         return userData["phones"][0]["countryCode"]
             
             elif requiredField == "city":
                 if len(userData["addresses"]) > 0:
-                    if userData.get("addresses") is not None and userData.get("city") is not None:
+                    if userData.get("addresses") is not None and userData["addresses"][0].get("city") is not None:
                         return userData["addresses"][0]["city"]
                 
             elif requiredField == "usertype":
@@ -109,7 +123,7 @@ class TruecallerHelper:
                     return data
         return None
     
-    def TrucallerUsageData():
+    def TrucallerUsageData(self):
         try:
             with open("./Data/TruecallerData.json", "r") as file:
                 info = json.load(file)
