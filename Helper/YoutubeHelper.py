@@ -1,7 +1,8 @@
 import json
 import datetime
 from Model.YoutubeData import YoutubeRequestModel, YoutubeResponseModel, DownloadDataDB, TotalDataResponse
-from pytube import YouTube as YT
+#from pytube import YouTube as YT
+from pytubefix import YouTube as YT
 import os
 import uuid
 
