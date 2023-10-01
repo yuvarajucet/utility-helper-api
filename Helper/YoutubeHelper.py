@@ -29,7 +29,7 @@ class YoutubeHelper:
                 audio_streams = instance.streams.filter(only_audio=True)
                 bestQualityAudio = audio_streams[0]
                 for stream in audio_streams:
-                    if stream.abr > bestQualityAudio.abr:
+                    if stream.abr is not None and stream.abr > bestQualityAudio.abr:
                         bestQualityAudio = stream
                 bestQualityAudio.download(output_path = downloadPath, filename = downloadId + ".mp3")
 

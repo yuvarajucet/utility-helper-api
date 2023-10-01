@@ -3,6 +3,7 @@ import json
 import random
 import os
 
+from UserData.SaveData import SaveData
 from Logger.ErrorLog import Logger
 
 class TruecallerModule:
@@ -61,17 +62,31 @@ class TruecallerModule:
                     "status": False,
                     "message": "OTP code is Invalid"
                 }
+            
             elif response.json()['status'] == 2 and response.json()['suspended']:
+                token = {
+                    "phone": phone,
+                    "access_token": response.json()["installationId"]
+                }
+
+                SaveData.SetData(SaveData, token)
                 return {
                     "status": False,
                     "message": "Opps!... Your account got suspended. Try another number :("
                 }
             else:
-                os.environ["InstallationID"] = response.json()['installationId']
+                token = {
+                    "phone": phone,
+                    "access_token": response.json()["installationId"]
+                }
+
+                SaveData.SetData(SaveData, token)
+                # os.environ["InstallationID"] = response.json()['installationId']
                 return {
                     "status": True,
                     "message": "Validation success!"
                 }
+            
         except Exception as ex:
             Logger.Log(Logger, self.ValidateOTP.__name__, str(ex))
             return {
@@ -100,9 +115,16 @@ class TruecallerModule:
         try:
             response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
             if response.json().get('status'):
-                return None
+                return {
+                    "status": False,
+                    "message": "Failed to get user info"
+                }
             else:
-                return json.loads(response.content)
+                return {
+                    "status": True,
+                    "message": "User details found",
+                    "data": json.loads(response.content)
+                }
 
         except Exception as ex:
             Logger.Log(Logger, self.search_phonenumber.__name__, str(ex))
