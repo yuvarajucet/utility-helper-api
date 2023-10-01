@@ -24,7 +24,7 @@ app.add_middleware(
 @app.get("/")
 async def index():
     return {
-        "message" : "API running..."
+        "message" : "API version 2.0 running..."
     }
 
 
