@@ -1,8 +1,10 @@
 import os
 import json
+import random
 
 from Module.TruecallerModule import TruecallerModule as TR
 from Model.TruecallerData import TruecallerResponseData, TruecallerUsageResponse
+from UserData.SaveData import SaveData
 from Logger.ErrorLog import Logger
 
 class TruecallerHelper:
@@ -19,20 +21,26 @@ class TruecallerHelper:
         return validateStatus
 
     def GetNumberInfo(self, number):
+        token_data = SaveData.GetData(SaveData)
+        if len(token_data) > 1:
+            randomToken = token_data[random.randint(0, len(token_data) - 1)]
+        else:
+            randomToken = token_data[0]
+
         phone = number
         country_code = "IN"
-        installation_id = os.getenv("InstallationID")
+        installation_id = randomToken["access_token"]
 
         response = None
         isExists = self.CheckNumberAlreadyExists(self, number)
         if isExists == None:
             data = TR.search_phonenumber(TR, phone, country_code, installation_id)
-            if data:
-                response = self.CreateUserData(self, data)
+            if data["status"]:
+                response = self.CreateUserData(self, data["data"])
             else:
                 return {
                     "status": False,
-                    "message": "Something went wrong!"
+                    "message": data["message"]
                 }
         else:
             response = isExists
@@ -55,7 +63,6 @@ class TruecallerHelper:
 
     def FillUserInfo(self, userInfo, requiredField):
         try:
-            print(userInfo)
             userData = userInfo["data"][0]
             if len(userData) > 0:
                 if requiredField == "name":
