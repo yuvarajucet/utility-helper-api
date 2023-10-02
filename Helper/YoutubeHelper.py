@@ -108,6 +108,8 @@ class YoutubeHelper:
 
     def deleteOldItems():
         folderPath = os.getcwd() + "/downloads/"
+        if not os.path.exists(folderPath):
+            os.makedirs(os.getcwd() +"/downloads/")
         currentTime = datetime.datetime.now()
         for filename in os.listdir(folderPath):
             filePath = os.path.join(folderPath, filename)
