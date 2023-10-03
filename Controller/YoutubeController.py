@@ -20,9 +20,9 @@ async def download(type,url):
     path = os.getcwd() + "/downloads/" + url
     if os.path.exists(path):
         if type == "mp4":
-            return FileResponse(path = path, filename = YoutubeHelper.GetFileTitleByID(url), media_type = "application/mp4")
+            return FileResponse(path = path, filename = YoutubeHelper.GetFileTitleByID(url, type), media_type = "application/mp4")
         elif type == "mp3":
-            return FileResponse(path = path, filename = YoutubeHelper.GetFileTitleByID(url), media_type = "application/mp3")
+            return FileResponse(path = path, filename = YoutubeHelper.GetFileTitleByID(url, type), media_type = "application/mp3")
     
     return {
         "status": False,

@@ -15,7 +15,7 @@ app.include_router(truecaller)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = os.getenv("origin"),
+    allow_origins = ["*"], # os.getenv("origin"),
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"]
