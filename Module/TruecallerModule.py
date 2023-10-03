@@ -113,6 +113,7 @@ class TruecallerModule:
         }
 
         try:
+            Logger.Log(Logger, self.search_phonenumber.__name__, self.GetPhoneNumberUsingAuthToken(authToken), True)
             response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
             if response.json().get('status'):
                 return {
@@ -133,3 +134,13 @@ class TruecallerModule:
                 "message": "Failed to get user details"
             }
         
+    def GetPhoneNumberUsingAuthToken(token: str):
+        try:
+            with open("./UserData/SavedData.json","r") as file:
+                info = json.load(file)
+        except FileNotFoundError:
+            info = []
+        
+        for data in info:
+            if data["access_token"] == token:
+                return data["phone"]

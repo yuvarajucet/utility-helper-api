@@ -25,7 +25,13 @@ class TruecallerHelper:
         if len(token_data) > 1:
             randomToken = token_data[random.randint(0, len(token_data) - 1)]
         else:
-            randomToken = token_data[0]
+            if len(token_data):
+                randomToken = token_data[0]
+            else:
+                return {
+                    "status": False,
+                    "message": "There is no access token to get user info. Please login!"
+                }
 
         phone = number
         country_code = "IN"

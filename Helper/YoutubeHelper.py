@@ -29,7 +29,7 @@ class YoutubeHelper:
                 audio_streams = instance.streams.filter(only_audio=True)
                 bestQualityAudio = audio_streams[0]
                 for stream in audio_streams:
-                    if stream.abr is not None and stream.abr > bestQualityAudio.abr:
+                    if stream.abr is not None and int(stream.abr.replace("kbps","")) > int(bestQualityAudio.abr.replace("kbps","")):
                         bestQualityAudio = stream
                 bestQualityAudio.download(output_path = downloadPath, filename = downloadId + ".mp3")
 
@@ -70,7 +70,7 @@ class YoutubeHelper:
         with open("./Data/downloadData.json", "w") as file:
             json.dump(data, file, indent = 4)
 
-    def GetFileTitleByID(fullId: str) -> str:
+    def GetFileTitleByID(fullId: str, type:str) -> str:
         try:
             with open("./Data/downloadData.json", "r") as file:
                 data: DownloadDataDB = json.load(file)
@@ -80,7 +80,7 @@ class YoutubeHelper:
         uniqId = fullId.split(".")[0]
         for info in data:
             if info["id"] == uniqId:
-                return info["title"]
+                return info["title"] + "." + type
         return "File"
         
     def GetTotalYoutubeUsage(self):
