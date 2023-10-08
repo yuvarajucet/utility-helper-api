@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import requests
 
 from Module.TruecallerModule import TruecallerModule as TR
 from Model.TruecallerData import TruecallerResponseData, TruecallerUsageResponse
@@ -40,7 +41,13 @@ class TruecallerHelper:
         response = None
         isExists = self.CheckNumberAlreadyExists(self, number)
         if isExists == None:
-            data = TR.search_phonenumber(TR, phone, country_code, installation_id)
+            param = {
+                "phone": phone,
+                "country_code": country_code,
+                "installation_id": installation_id
+            }
+            localResp = requests.get("http://127.0.0.1:5000/api/v1/getfromlocaldata", params=param)
+            data = json.loads(localResp.content)
             if data["status"]:
                 response = self.CreateUserData(self, data["data"])
             else:
