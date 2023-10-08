@@ -81,7 +81,6 @@ class TruecallerModule:
                 }
 
                 SaveData.SetData(SaveData, token)
-                # os.environ["InstallationID"] = response.json()['installationId']
                 return {
                     "status": True,
                     "message": "Validation success!"
@@ -116,6 +115,7 @@ class TruecallerModule:
             Logger.Log(Logger, self.search_phonenumber.__name__, self.GetPhoneNumberUsingAuthToken(authToken), True)
             response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
             if response.json().get('status'):
+                Logger.Log(Logger, self.search_phonenumber.__name__, str(response.json()))
                 return {
                     "status": False,
                     "message": "Failed to get user info"
