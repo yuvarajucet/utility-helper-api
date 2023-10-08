@@ -115,6 +115,9 @@ class TruecallerModule:
             Logger.Log(Logger, self.search_phonenumber.__name__, self.GetPhoneNumberUsingAuthToken(authToken), True)
             Logger.Log(Logger, "Test", str(phone))
             response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
+            Logger.Log(Logger, "res==> ", str(respones))
+            Logger.Log(Logger, "this ==> ", str(response.content))
+            Logger.Log(Logger, "status ==> ", str(response.json().get('status')))
             if response.json().get('status'):
                 Logger.Log(Logger, self.search_phonenumber.__name__, str(response.json()))
                 return {
