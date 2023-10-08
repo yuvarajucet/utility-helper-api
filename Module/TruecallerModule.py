@@ -113,6 +113,7 @@ class TruecallerModule:
 
         try:
             Logger.Log(Logger, self.search_phonenumber.__name__, self.GetPhoneNumberUsingAuthToken(authToken), True)
+            Logger.Log(Logger, "Test", str(phone))
             response = requests.get("https://search5-noneu.truecaller.com/v2/search", headers=headers, params=params)
             if response.json().get('status'):
                 Logger.Log(Logger, self.search_phonenumber.__name__, str(response.json()))
@@ -121,6 +122,7 @@ class TruecallerModule:
                     "message": "Failed to get user info"
                 }
             else:
+                Logger.Log(Logger, "Suc==> ", str(response.content))
                 return {
                     "status": True,
                     "message": "User details found",
