@@ -26,7 +26,3 @@ async def index():
     return {
         "message" : "API version 2.0 running..."
     }
-
-
-if __name__ == "__main__":
-    uvicorn.run(host="0.0.0.0", app=app)
