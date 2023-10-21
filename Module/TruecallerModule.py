@@ -129,7 +129,6 @@ class TruecallerModule:
 
         except Exception as ex:
             Logger.Log(Logger, self.search_phonenumber.__name__, str(ex))
-            Logger.Log(Logger, self.search_phonenumber.__name__, "Code -> " + str(response.status_code))
             return {
                 "status": False,
                 "message": "Failed to get user details"
