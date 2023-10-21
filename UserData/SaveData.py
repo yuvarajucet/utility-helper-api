@@ -17,7 +17,7 @@ class SaveData:
         except Exception as ex:
             Logger.Log(Logger, self.SetData.__name__, str(ex))
 
-    def GetData(self):
+    def GetUserTokenData(self):
         try:
             with open("./UserData/SavedData.json", "r") as file:
                 data = json.load(file)
